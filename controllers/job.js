@@ -17,18 +17,35 @@ const postJob = async (req, res) => {
         res.json({ success: true, message: newJob });
 
     } catch (err) {
-        res.json({ success: false, message: "somthing went wrong" });
-
+        console.log(err);
+        res.json({ success: false, message: "somthing went wrong", error: err.message });
     }
 }
 
-const updateJob = (req, res) => {
-    res.json({ success: true, message: "job updated" })
+const updateJob = async (req, res) => {
+    try {
+        const user = await jobModel.findOneAndUpdate({ _id: req.body.id }, { $set: req.body }, { new: true });
+        if (user) {
+            console.log(user);
+            return res.status(200).json({ success: true, message: "updated user with this id: " + req.body.id })
+        } else {
+            return res.status(400).json({ success: false, message: "user not found with this id : " + req.body.id })
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ success: false, message: "somthing went wrong", error: error })
+    }
+
 }
 
 
-const deleteJob = (req, res) => {
-    res.json({ success: true, message: "job deleted" })
+const deleteJob = async (req, res) => {
+    try {
+        await jobModel.findByIdAndDelete(req.body.id);
+        res.status(200).json({ success: true, message: "job deleted" })
+    } catch (error) {
+        return res.status(400).json({ success: false, message: "job not found", error: error })
+    }
 }
 
 

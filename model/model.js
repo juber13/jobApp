@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs')
 const jobSchema = new mongoose.Schema({
     title: {
         type: String,
@@ -9,6 +10,11 @@ const jobSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+
+    // password: {
+    //     type: String,
+    //     required: true
+    // },
 
     company: {
         type: String,
@@ -27,8 +33,13 @@ const jobSchema = new mongoose.Schema({
 
 })
 
+// jobSchema.pre("save", async function () {
+//         const salt = await bcrypt.genSalt(10);
+//         this.password = await bcrypt.hash(this.password, salt);
+// })
 
-const jobModel = mongoose.model('jobs', jobSchema);
+
+const jobModel = mongoose.model('Job', jobSchema);
 
 module.exports = jobModel;
 
